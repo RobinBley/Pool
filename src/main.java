@@ -59,15 +59,15 @@ public class main {
     axisTitle.setTitleFont(titleFont);
     
     // Feature: axis title.
-    axisTitle.setTitle("Hoppelhase");
+//    axisTitle.setTitle("Hoppelhase");
     
     // Feature: axis formatter.
     axisY.setFormatter(new LabelFormatterDate(new SimpleDateFormat()));
     
     // Feature: axis title (again).
-    axisTitle = axisX.getAxisTitle();
-    axisTitle.setTitle("Emil");
-    axisTitle.setTitleFont(titleFont);
+//    axisTitle = axisX.getAxisTitle();
+//    axisTitle.setTitle("Emil");
+//    axisTitle.setTitleFont(titleFont);
     
     // Feature: range policy for axis. 
     axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(0, 220)));
@@ -80,7 +80,7 @@ public class main {
     highlighters.clear();
     trace.addPointHighlighter(new PointHighlighterConfigurable(new PointPainterDisc(20), true));
     chart.enablePointHighlighting(true);
-    
+    chart.setBackground(Color.cyan);
     // Add all points, as it is static:
     double high = System.currentTimeMillis();
     for (double i = 0; i < 20; i++) {

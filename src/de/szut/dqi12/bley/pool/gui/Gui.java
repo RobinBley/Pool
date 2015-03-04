@@ -165,6 +165,7 @@ public class Gui extends javax.swing.JFrame {
         this.jPanel1.setLayout(new BorderLayout());
         this.jPanel1.add(chart);
         this.jPanel1.validate();
+        System.out.println(getBackground().toString());
     }
 }
 
