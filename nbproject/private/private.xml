@@ -3,7 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="Schule">
-            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/Poo.java</file>
+            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/gui/CoordinateViewChart.java</file>
+            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/gui/Gui.java</file>
+            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/controller/Controller.java</file>
+            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/main.java</file>
+            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/model/Model.java</file>
+            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/gui/MinimalStaticChart.java</file>
+            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/gui/AdvancedStaticChart.java</file>
         </group>
     </open-files>
 </project-private>

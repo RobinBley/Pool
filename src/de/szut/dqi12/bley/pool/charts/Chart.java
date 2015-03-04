@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.szut.dqi12.bley.pool.controller;
+package de.szut.dqi12.bley.pool.charts;
+
+import info.monitorenter.gui.chart.Chart2D;
+import java.util.ArrayList;
 
 /**
  *
  * @author Robin
  */
-public class Controller {
-    
+public interface Chart {
+    public Chart2D generateChart(ArrayList<Double[]> data);
 }
