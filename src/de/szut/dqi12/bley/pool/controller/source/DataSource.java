@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.szut.dqi12.bley.pool.controller.fileoperations;
+package de.szut.dqi12.bley.pool.controller.source;
 
 import java.util.ArrayList;
 

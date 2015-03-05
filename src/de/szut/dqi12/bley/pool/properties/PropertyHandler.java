@@ -87,7 +87,6 @@ public class PropertyHandler {
         File file = new File("pool.properties");
 
         try {
-            System.out.println("hahsfd");
             OutputStream outputStream = new FileOutputStream(file);
             properties.store(outputStream, "Settings for Pool");
         } catch (Exception e) {

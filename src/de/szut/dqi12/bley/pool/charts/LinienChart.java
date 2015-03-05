@@ -25,34 +25,37 @@ public class LinienChart implements Chart {
     private ITrace2D trace;
 
     public LinienChart() {
-        Chart2D chart = new Chart2D();
-
+        chart = new Chart2D();
+        range = new int[2];
+        range[0] = 0;
+        range[1] = 10;
         // Create an ITrace:
         // Note that dynamic charts need limited amount of values!!!
         // ITrace2D trace = new Trace2DLtd(200);
-        ITrace2D trace = new Trace2DSimple();
+        trace = new Trace2DSimple();
         // Add the trace to the chart:
         chart.addTrace(trace);
-        trace.setColor(Color.RED);
+//        trace.setColor(Color.RED);
 
-
-        ChartPanel chartPanel = new ChartPanel(chart);
+//        ChartPanel chartPanel = new ChartPanel(chart);
         // add a titlede border:
 
-        chartPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
-                .createLineBorder(Color.BLACK), "Chart", TitledBorder.CENTER, TitledBorder.CENTER));
+//        chartPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
+//                .createLineBorder(Color.BLACK), "Chart", TitledBorder.CENTER, TitledBorder.CENTER));
 
     }
 
     @Override
     public Chart2D generateChart(ArrayList<Double[]> data) {
-        for (double i = range[0]; i < range[1]; i++) {
-            if (data.size() < i) {
-                break;
+        if (data != null) {
+            for (int i = 0; i <= range[1]; i++) {
+                if (data.size() <= (i - 1)) {
+                    break;
+                }
+                trace.addPoint(data.get(i)[0], data.get(i)[1]);
             }
-            trace.addPoint(data.get((int) i)[0], data.get((int) i)[1]);
-
         }
+
         return chart;
     }
 

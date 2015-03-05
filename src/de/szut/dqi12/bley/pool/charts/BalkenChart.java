@@ -9,7 +9,6 @@ import info.monitorenter.gui.chart.Chart2D;
 import info.monitorenter.gui.chart.IAxis;
 import info.monitorenter.gui.chart.IPointHighlighter;
 import info.monitorenter.gui.chart.ITrace2D;
-import info.monitorenter.gui.chart.labelformatters.LabelFormatterDate;
 import info.monitorenter.gui.chart.pointhighlighters.PointHighlighterConfigurable;
 import info.monitorenter.gui.chart.pointpainters.PointPainterDisc;
 import info.monitorenter.gui.chart.rangepolicies.RangePolicyFixedViewport;
@@ -18,7 +17,6 @@ import info.monitorenter.gui.chart.traces.painters.TracePainterVerticalBar;
 import info.monitorenter.util.Range;
 import java.awt.Color;
 import java.awt.Font;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Set;
 import javax.swing.UIManager;
@@ -32,17 +30,21 @@ public class BalkenChart implements Chart {
     private int[] range;
     private Chart2D chart;
     private ITrace2D trace;
+    private IAxis axisX;
 
-    public void generateChart(int[] range, String xTitle, String yTitle) {
+    public BalkenChart() {
+        this.range = new int[2];
+        range[0] = 0;
+        range[1] = 100;
         this.range = range;
         chart = new Chart2D();
 
         // Obtain the basic default axes: 
-        IAxis axisX = chart.getAxisX();
+        axisX = chart.getAxisX();
         IAxis axisY = chart.getAxisY();
 
         // Feature: Grids:
-        chart.setGridColor(Color.LIGHT_GRAY);
+//        chart.setGridColor(Color.GREEN);
         axisX.setPaintGrid(true);
         axisY.setPaintGrid(true);
 
@@ -52,10 +54,10 @@ public class BalkenChart implements Chart {
         chart.addTrace(trace);
 
         // Feature: trace painters: You are also able to specify multiple ones!
-        trace.setTracePainter(new TracePainterVerticalBar(4, chart));
+        trace.setTracePainter(new TracePainterVerticalBar(6, chart));
 
         // Feature: trace color. 
-        trace.setColor(Color.ORANGE);
+        trace.setColor(Color.GREEN);
 
         // Feature: Axis title font. 
         Font titleFont = UIManager.getDefaults().getFont("Label.font").deriveFont(14f).deriveFont(
@@ -64,17 +66,18 @@ public class BalkenChart implements Chart {
         axisTitle.setTitleFont(titleFont);
 
         // Feature: axis title.
-        axisTitle.setTitle(yTitle);
+//        axisTitle.setTitle(yTitle);
         // Feature: axis formatter.
-        axisY.setFormatter(new LabelFormatterDate(new SimpleDateFormat()));
+//        axisY.setFormatter(new LabelFormatterDate(new SimpleDateFormat()));
 
         // Feature: axis title (again).
 //    axisTitle = axisX.getAxisTitle();
-        axisTitle.setTitle(xTitle);
+//        axisTitle.setTitle(xTitle);
 //    axisTitle.setTitleFont(titleFont);
         // Feature: range policy for axis. 
         axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(this.range[0], this.range[1])));
-
+//        axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(0, 220)));
+        
         // Feature: turn on tool tips (recommended for use in static mode only): 
         chart.setToolTipType(Chart2D.ToolTipType.VALUE_SNAP_TO_TRACEPOINTS);
 
@@ -88,12 +91,17 @@ public class BalkenChart implements Chart {
 
     @Override
     public Chart2D generateChart(ArrayList<Double[]> data) {
-        for (double i = range[0]; i < range[1]; i++) {
-            if (data.size() < i){
-                break;
-            }
-            trace.addPoint(data.get((int) i)[0], data.get((int) i)[1]);
+        if (data != null) {
+            if(range[1] > data.size()){
+                range[1] = data.size();
+                        axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(this.range[0], this.range[1])));
 
+            }
+            for (double i = range[0]; i < range[1]; i++) {
+                
+                trace.addPoint(data.get((int) i)[0], data.get((int) i)[1]);
+
+            }
         }
         return chart;
     }

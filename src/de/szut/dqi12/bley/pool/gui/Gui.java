@@ -9,6 +9,10 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,6 +26,12 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private JMenuItem fileOpenItem;
+    private JMenu fileMenu;
+    private JMenuBar bar;
+    private JMenu chartMenu;
+    private JMenuItem chartItemBalkenDiagramm;
+    private JMenuItem chartItemLinienDiagramm;
 
     /**
      * Komponenten der Klasse werden Initialisiert
@@ -52,6 +62,41 @@ public class Gui extends javax.swing.JFrame {
                 Controller.getInstance().connect();
             }
         });
+        fileOpenItem.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+
+                int selectedOption = fileChooser.showOpenDialog(fileOpenItem);
+
+                if (selectedOption == JFileChooser.APPROVE_OPTION) {
+                    Controller.getInstance().setChart(fileChooser.getSelectedFile().getPath(), null);
+
+                    remove(jButton1);
+                    remove(jComboBox1);
+                    remove(jScrollPane1);
+                    remove(jTable1);
+                    jPanel1.setBounds(getBounds());
+                    validate();
+                }
+            }
+        });
+        chartItemBalkenDiagramm.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Controller.getInstance().setChart(null, "BalkenChart");
+            }
+        });
+        chartItemLinienDiagramm.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Controller.getInstance().setChart(null, "LinienChart");
+
+            }
+        });
     }
 
     /**
@@ -64,6 +109,30 @@ public class Gui extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jComboBox1 = new javax.swing.JComboBox();
         jPanel1 = new javax.swing.JPanel();
+
+        bar = new JMenuBar();
+
+        //Intialisierung der MenuBar
+        //Intialisierung des Menus:File
+        fileOpenItem = new JMenuItem();
+        fileMenu = new JMenu();
+        fileMenu.setText("file");
+        fileOpenItem.setText("Open File");
+        fileMenu.add(fileOpenItem);
+        bar.add(fileMenu);
+
+        //Intialisierung des Menus:Chart
+        chartItemBalkenDiagramm = new JMenuItem();
+        chartItemLinienDiagramm = new JMenuItem();
+        chartMenu = new JMenu();
+        chartMenu.setText("Chart");
+        chartItemBalkenDiagramm.setText("Balkendiagramm");
+        chartItemLinienDiagramm.setText("Liniendiagramm");
+        chartMenu.add(chartItemBalkenDiagramm);
+        chartMenu.add(chartItemLinienDiagramm);
+        bar.add(chartMenu);
+
+        setJMenuBar(bar);
 
         jPanel1.setLayout(new BorderLayout());
 
@@ -130,23 +199,23 @@ public class Gui extends javax.swing.JFrame {
      * welche anzuzeigen sind.
      */
     public void fillTable(HashMap<String, ArrayList> data) {
-        if(data != null){
-        ArrayList<ArrayList<String>> tableData = new ArrayList<>();
-        ArrayList<String> tableNames = new ArrayList<>();
+        if (data != null) {
+            ArrayList<ArrayList<String>> tableData = new ArrayList<>();
+            ArrayList<String> tableNames = new ArrayList<>();
 
-        for (Object name : data.keySet().toArray()) {
-            tableData.add(data.get(name.toString()));
-            tableNames.add(name.toString());
-        }
+            for (Object name : data.keySet().toArray()) {
+                tableData.add(data.get(name.toString()));
+                tableNames.add(name.toString());
+            }
 
-        DefaultTableModel tableModel = new DefaultTableModel();
-        int i = 0;
+            DefaultTableModel tableModel = new DefaultTableModel();
+            int i = 0;
 
-        for (ArrayList<String> temp : tableData) {
-            tableModel.addColumn(tableNames.get(i), temp.toArray());
-            i++;
-        }
-        jTable1.setModel(tableModel);
+            for (ArrayList<String> temp : tableData) {
+                tableModel.addColumn(tableNames.get(i), temp.toArray());
+                i++;
+            }
+            jTable1.setModel(tableModel);
         }
 
     }
@@ -157,19 +226,14 @@ public class Gui extends javax.swing.JFrame {
      * @param chart Chart2D-Object, welches ins Panel geladen wird.
      */
     public void setGraph(Chart2D chart) {
-        if(chart != null){
-        ChartPanel cp = new ChartPanel(chart);
-        this.jPanel1.removeAll();
-        this.jPanel1.setLayout(new BorderLayout());
-        this.jPanel1.add(chart);
-        this.jPanel1.validate();
-        System.out.println(getBackground().toString());
+        if (chart != null) {
+            ChartPanel cp = new ChartPanel(chart);
+            this.jPanel1.removeAll();
+            this.jPanel1.setLayout(new BorderLayout());
+            this.jPanel1.add(chart);
+            this.jPanel1.validate();
         }
-        
-        
-        
+
     }
-    public void setSelectedItem(String item){
-        jComboBox1.setSelectedItem(item);
-    }
+
 }
