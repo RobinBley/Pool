@@ -1,4 +1,5 @@
 
+import de.szut.dqi12.bley.pool.controller.Controller;
 import de.szut.dqi12.bley.pool.gui.Gui;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class main {
     // Make it visible:
 //        new Gui().setGraph(chart);
        
-        new Gui().fillTable(null);
+        Controller.getInstance().start();
         
     }
 

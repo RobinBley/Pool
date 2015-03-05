@@ -21,6 +21,12 @@ public class PropertyHandler {
 
     public PropertyHandler() {
         this.properties = new Properties();
+        try {
+            InputStream input = new FileInputStream("pool.properties");
+            properties.load(input);
+        } catch (IOException ex) {
+            File file = new File("Pool.properties");
+        }
     }
 
     /**
@@ -32,7 +38,6 @@ public class PropertyHandler {
      */
     public boolean updateProperties() {
         File file = new File("Pool.properties");
-
         if (!file.exists()) {
             try {
                 if (!file.createNewFile()) {
@@ -67,8 +72,10 @@ public class PropertyHandler {
 
         return updateProperties();
     }
-    public void savePropertie(String key, String value){
+
+    public void savePropertie(String key, String value) {
         properties.setProperty(key, value);
+        updateProperties();
     }
 
     /**
@@ -80,6 +87,7 @@ public class PropertyHandler {
         File file = new File("pool.properties");
 
         try {
+            System.out.println("hahsfd");
             OutputStream outputStream = new FileOutputStream(file);
             properties.store(outputStream, "Settings for Pool");
         } catch (Exception e) {

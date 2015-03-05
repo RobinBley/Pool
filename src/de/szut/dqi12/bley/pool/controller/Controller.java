@@ -44,25 +44,29 @@ public class Controller {
         } catch (Exception e) {
             chart = new BalkenChart();
         }
-        
+
+        property = new PropertyHandler();
         gui = new Gui();
+        selectedItem = (property.getProperty("selectedItem"));
 
     }
 
     public void setSelectedItem(String selectedItem) {
         if (selectedItem != null) {
             this.selectedItem = selectedItem;
-            property.savePropertie("selectedItem", selectedItem);
+
+            //DO SOMETHING
         }
+    }
+    
+    public void getChart(String path){
+        gui.setGraph(chart.generateChart(source.getData(path)));
     }
 
     public void connect() {
     }
-    
-    
-    
-    
-    public void start(){
+
+    public void start() {
     }
 
 }

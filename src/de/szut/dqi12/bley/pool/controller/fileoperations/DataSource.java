@@ -5,10 +5,14 @@
  */
 package de.szut.dqi12.bley.pool.controller.fileoperations;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Robin
  */
 public interface DataSource {
+    
+    public ArrayList<Double[]> getData(String path);
     
 }

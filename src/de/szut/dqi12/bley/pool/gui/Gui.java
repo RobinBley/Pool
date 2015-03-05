@@ -165,5 +165,11 @@ public class Gui extends javax.swing.JFrame {
         this.jPanel1.validate();
         System.out.println(getBackground().toString());
         }
+        
+        
+        
+    }
+    public void setSelectedItem(String item){
+        jComboBox1.setSelectedItem(item);
     }
 }
