@@ -33,7 +33,7 @@ public class BalkenChart implements Chart {
     private Chart2D chart;
     private ITrace2D trace;
 
-    public BalkenChart(int[] range, String xTitle, String yTitle) {
+    public void generateChart(int[] range, String xTitle, String yTitle) {
         this.range = range;
         chart = new Chart2D();
 

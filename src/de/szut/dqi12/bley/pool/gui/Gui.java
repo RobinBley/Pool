@@ -1,10 +1,15 @@
 package de.szut.dqi12.bley.pool.gui;
 
+import de.szut.dqi12.bley.pool.controller.Controller;
 import info.monitorenter.gui.chart.Chart2D;
 import info.monitorenter.gui.chart.views.ChartPanel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import javax.swing.JComboBox;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -12,33 +17,46 @@ import java.awt.event.ActionListener;
  */
 public class Gui extends javax.swing.JFrame {
 
+    private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+
     /**
-     * Creates new form Gui
+     * Komponenten der Klasse werden Initialisiert
      */
     public Gui() {
         initComponents();
-//        addListener
+        addListener();
         setVisible(true);
 
     }
 
+    /**
+     * Den Komponenten der Klasse Gui werden ActionListener inzugefuegt.
+     */
     private void addListener() {
-        this.jComboBox1.addActionListener((ActionListener) this);
+        this.jComboBox1.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        JComboBox source = (JComboBox) e.getSource();
+                        Controller.getInstance().setSelectedItem((String) source.getSelectedItem());
+                    }
+                }
+        );
         this.jButton1.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                //...
+                Controller.getInstance().connect();
             }
         });
     }
 
-    public void actionPerformed(ActionEvent e) {
-        String tableName = (String) this.jComboBox1.getSelectedItem();
-        //.....
-    }
-
-                         
+    /**
+     * Komponenten der der Klasse werden Initialisiert
+     */
     private void initComponents() {
 
         jButton1 = new javax.swing.JButton();
@@ -46,24 +64,18 @@ public class Gui extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jComboBox1 = new javax.swing.JComboBox();
         jPanel1 = new javax.swing.JPanel();
-        
+
         jPanel1.setLayout(new BorderLayout());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton1.setText("Verbinden");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-                new Object[][]{
-                    {null, null, null, null},
-                    {null, null, null, null},
-                    {null, null, null, null},
-                    {null, null, null, null}
-                },
-                new String[]{
-                    "Title 1", "Title 2", "Title 3", "Title 4"
-                }
-        ));
+        jTable1.setEnabled(false);
+        jTable1.setDragEnabled(false);
+        jTable1.setAutoCreateRowSorter(true);
+
+        jTable1.setAutoCreateRowSorter(true);
         jScrollPane1.setViewportView(jTable1);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
@@ -112,61 +124,46 @@ public class Gui extends javax.swing.JFrame {
     }// </editor-fold>                        
 
     /**
-     * @param args the command line arguments
+     * Der Table des Frames wird mit Daten befuellt.
+     *
+     * @param data Daten in From einer Hashmap mit den entsprechenden Werten,
+     * welche anzuzeigen sind.
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-            //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Gui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    public void fillTable(HashMap<String, ArrayList> data) {
+        if(data != null){
+        ArrayList<ArrayList<String>> tableData = new ArrayList<>();
+        ArrayList<String> tableNames = new ArrayList<>();
+
+        for (Object name : data.keySet().toArray()) {
+            tableData.add(data.get(name.toString()));
+            tableNames.add(name.toString());
         }
-            //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Gui().setVisible(true);
-            }
-        });
+        DefaultTableModel tableModel = new DefaultTableModel();
+        int i = 0;
+
+        for (ArrayList<String> temp : tableData) {
+            tableModel.addColumn(tableNames.get(i), temp.toArray());
+            i++;
+        }
+        jTable1.setModel(tableModel);
+        }
+
     }
 
-    // Variables declaration - do not modify                     
-    private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    // End of variables declaration                   
-
-    private String getChoosedTable() {
-
-        return null;
-    }
-
+    /**
+     * In Dem Panels des Frames wird ein Chart2D eingefuegt.
+     *
+     * @param chart Chart2D-Object, welches ins Panel geladen wird.
+     */
     public void setGraph(Chart2D chart) {
+        if(chart != null){
         ChartPanel cp = new ChartPanel(chart);
         this.jPanel1.removeAll();
         this.jPanel1.setLayout(new BorderLayout());
         this.jPanel1.add(chart);
         this.jPanel1.validate();
         System.out.println(getBackground().toString());
+        }
     }
 }
-
-

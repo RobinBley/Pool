@@ -24,7 +24,7 @@ public class LinienChart implements Chart {
     private Chart2D chart;
     private ITrace2D trace;
 
-    public LinienChart(String title) {
+    public LinienChart() {
         Chart2D chart = new Chart2D();
 
         // Create an ITrace:
@@ -40,7 +40,7 @@ public class LinienChart implements Chart {
         // add a titlede border:
 
         chartPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
-                .createLineBorder(Color.BLACK), title, TitledBorder.CENTER, TitledBorder.CENTER));
+                .createLineBorder(Color.BLACK), "Chart", TitledBorder.CENTER, TitledBorder.CENTER));
 
     }
 
