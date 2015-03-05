@@ -27,6 +27,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private JMenuItem fileOpenItem;
+    private JMenuItem databseMenu;
     private JMenu fileMenu;
     private JMenuBar bar;
     private JMenu chartMenu;
@@ -40,6 +41,19 @@ public class Gui extends javax.swing.JFrame {
         initComponents();
         addListener();
         setVisible(true);
+
+    }
+
+    private void disableDatabaseComponents() {
+        jButton1.setVisible(false);
+        jTable1.setVisible(false);
+        jComboBox1.setVisible(false);
+    }
+
+    private void enableDatabaseComponents() {
+        jButton1.setVisible(true);
+        jTable1.setVisible(true);
+        jComboBox1.setVisible(true);
 
     }
 
@@ -72,11 +86,7 @@ public class Gui extends javax.swing.JFrame {
 
                 if (selectedOption == JFileChooser.APPROVE_OPTION) {
                     Controller.getInstance().setChart(fileChooser.getSelectedFile().getPath(), null);
-
-                    remove(jButton1);
-                    remove(jComboBox1);
-                    remove(jScrollPane1);
-                    remove(jTable1);
+                    disableDatabaseComponents();
                     jPanel1.setBounds(getBounds());
                     validate();
                 }
@@ -95,6 +105,13 @@ public class Gui extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 Controller.getInstance().setChart(null, "LinienChart");
 
+            }
+        });
+        databseMenu.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                enableDatabaseComponents();
             }
         });
     }
@@ -116,9 +133,12 @@ public class Gui extends javax.swing.JFrame {
         //Intialisierung des Menus:File
         fileOpenItem = new JMenuItem();
         fileMenu = new JMenu();
+        databseMenu = new JMenuItem();
         fileMenu.setText("file");
         fileOpenItem.setText("Open File");
         fileMenu.add(fileOpenItem);
+        databseMenu.setText("Datenbank");
+        fileMenu.add(databseMenu);
         bar.add(fileMenu);
 
         //Intialisierung des Menus:Chart
@@ -198,7 +218,7 @@ public class Gui extends javax.swing.JFrame {
      * @param data Daten in From einer Hashmap mit den entsprechenden Werten,
      * welche anzuzeigen sind.
      */
-    public void fillTable(HashMap<String, ArrayList> data) {
+    public void fillTable(HashMap<String, ArrayList<String>> data) {
         if (data != null) {
             ArrayList<ArrayList<String>> tableData = new ArrayList<>();
             ArrayList<String> tableNames = new ArrayList<>();
@@ -218,6 +238,12 @@ public class Gui extends javax.swing.JFrame {
             jTable1.setModel(tableModel);
         }
 
+    }
+
+    public void fillComboBox(ArrayList<String> items) {
+        for (String item : items) {
+            jComboBox1.addItem(items);
+        }
     }
 
     /**

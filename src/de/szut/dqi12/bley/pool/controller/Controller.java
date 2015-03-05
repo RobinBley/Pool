@@ -9,10 +9,12 @@ import de.szut.dqi12.bley.pool.charts.BalkenChart;
 import de.szut.dqi12.bley.pool.charts.Chart;
 import de.szut.dqi12.bley.pool.charts.LinienChart;
 import de.szut.dqi12.bley.pool.controller.source.DataSource;
+import de.szut.dqi12.bley.pool.controller.source.DatabaseSource;
 import de.szut.dqi12.bley.pool.controller.source.SourceCSV;
 import de.szut.dqi12.bley.pool.gui.Gui;
 import de.szut.dqi12.bley.pool.properties.PropertyHandler;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -62,6 +64,9 @@ public class Controller {
     public void setSelectedItem(String selectedItem) {
         if (selectedItem != null) {
             this.selectedItem = selectedItem;
+            
+            ///+++++++++++
+//            this.setGuiTable(source.getData(selectedItem));
 
             //DO SOMETHING
         }
@@ -95,9 +100,17 @@ public class Controller {
     }
 
     public void connect() {
+        gui.fillComboBox(((DatabaseSource)chart).getTableNames());
+        
+        
     }
 
     public void start() {
     }
+
+    public void setGuiTable(HashMap<String, ArrayList<String>> data) {
+        gui.fillTable(data);
+    }
+  
 
 }
