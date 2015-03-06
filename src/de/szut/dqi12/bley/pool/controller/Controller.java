@@ -14,7 +14,6 @@ import de.szut.dqi12.bley.pool.controller.source.SourceCSV;
 import de.szut.dqi12.bley.pool.gui.Gui;
 import de.szut.dqi12.bley.pool.properties.PropertyHandler;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  *
@@ -107,6 +106,13 @@ public class Controller {
     }
 
     public void start() {
+    }
+    
+    public void saveProperty(String key, String property){
+        this.property.savePropertie(key, property);
+    }
+    public String getProperty(String key){
+        return this.property.getProperty(key);
     }
 
 }

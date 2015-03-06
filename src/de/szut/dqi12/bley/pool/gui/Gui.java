@@ -33,6 +33,8 @@ public class Gui extends javax.swing.JFrame {
     private JMenu chartMenu;
     private JMenuItem chartItemBalkenDiagramm;
     private JMenuItem chartItemLinienDiagramm;
+    private JMenu options;
+    private JMenuItem properties;
 
     /**
      * Komponenten der Klasse werden Initialisiert
@@ -61,6 +63,17 @@ public class Gui extends javax.swing.JFrame {
      * Den Komponenten der Klasse Gui werden ActionListener inzugefuegt.
      */
     private void addListener() {
+        
+//        Controller.getInstance().setChart("getSelectedColumoderso", null);
+        
+        
+        this.properties.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new PropertyDialog().setVisible(true);
+            }
+        });
         this.jComboBox1.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
@@ -91,7 +104,9 @@ public class Gui extends javax.swing.JFrame {
                     validate();
                 }
             }
+
         });
+
         chartItemBalkenDiagramm.addActionListener(new ActionListener() {
 
             @Override
@@ -127,10 +142,10 @@ public class Gui extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox();
         jPanel1 = new javax.swing.JPanel();
 
-        bar = new JMenuBar();
 
         //Intialisierung der MenuBar
         //Intialisierung des Menus:File
+        bar = new JMenuBar();
         fileOpenItem = new JMenuItem();
         fileMenu = new JMenu();
         databseMenu = new JMenuItem();
@@ -151,6 +166,14 @@ public class Gui extends javax.swing.JFrame {
         chartMenu.add(chartItemBalkenDiagramm);
         chartMenu.add(chartItemLinienDiagramm);
         bar.add(chartMenu);
+        
+        //Intialisierung des Menus:Chart
+        options = new JMenu();
+        properties = new JMenuItem();
+        options.setText("Options");
+        properties.setText("properties");
+        options.add(properties);
+        bar.add(options);
 
         setJMenuBar(bar);
 
@@ -210,6 +233,7 @@ public class Gui extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>                        
 
     /**
