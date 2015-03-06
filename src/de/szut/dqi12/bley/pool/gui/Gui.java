@@ -65,7 +65,7 @@ public class Gui extends javax.swing.JFrame {
                 new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         JComboBox source = (JComboBox) e.getSource();
-                        Controller.getInstance().setSelectedItem((String) source.getSelectedItem());
+                        Controller.getInstance().setTable((String) source.getSelectedItem());
                     }
                 }
         );
@@ -241,8 +241,9 @@ public class Gui extends javax.swing.JFrame {
     }
 
     public void fillComboBox(ArrayList<String> items) {
+        jComboBox1.removeAllItems();
         for (String item : items) {
-            jComboBox1.addItem(items);
+            jComboBox1.addItem(item);
         }
     }
 

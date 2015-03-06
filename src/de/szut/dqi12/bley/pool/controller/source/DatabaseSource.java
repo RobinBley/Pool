@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author Robin Bley
  */
-public class DatabaseSource implements DataSource{
+public class DatabaseSource implements DataSource {
 
     private String user;
     private String pass;
@@ -32,9 +32,8 @@ public class DatabaseSource implements DataSource{
      * @param url Pfad zur Datenbank
      * @param password Password des Datenbankbenutzers
      * @param user Benutzername zur Datenbank
-     * @param driver Name des zu ladenenden Treibers
      */
-    public DatabaseSource(String url, String password, String user, String driver) {
+    public boolean connect(String url, String user, String password) {
         // Komponenten der Klasse werden initailisiert.
         this.url = url;
         this.pass = password;
@@ -44,15 +43,15 @@ public class DatabaseSource implements DataSource{
 
         try {
             //Treiber der Datenbank wird geladen.
-            Class.forName(driver);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
+            Class.forName("org.sqlite.JDBC");
+
             //Verbindung zur Datenbank wird aufgebaut
             this.conn = DriverManager.getConnection(this.url, this.user, this.pass);
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseSource.class.getName()).log(Level.SEVERE, null, ex);
+
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
         }
 
     }
@@ -65,30 +64,8 @@ public class DatabaseSource implements DataSource{
         this.end = end;
     }
 
-    /**
-     * Eine Verbindung zu einer Datenbank wird aufgebaut
-     *
-     * @return Eine Verbindung zur Datenbank
-     */
-    public Connection getConnection() {
-        try {
-            //Verbindung zur Datenbank wird aufgebaut.
-            conn = DriverManager.getConnection(this.url, this.user, this.pass);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return conn;
-    }
-
     public void setConnection(Connection conn) {
         this.conn = conn;
-    }
-
-    public void updateConnection(String url, String user, String pass) {
-        this.url = url;
-        this.user = user;
-        this.pass = pass;
-        setConnection(getConnection());
     }
 
     /**
@@ -161,58 +138,6 @@ public class DatabaseSource implements DataSource{
         }
         //Die ArrayList wird zurueckgeliefert.
         return tableNames;
-
-    }
-
-    /**
-     * Eine Tabelle der Datenbank wird entfernt
-     *
-     * @param table name der Tabelle der Datenbank
-     * @return liefert true oder false zurueck ob die operation erfolgte
-     */
-    public boolean deleteTable(String table) {
-        try {
-            //Ein Statement wird vorbereitet, welches eine biliebige Tabelle entfernt.
-            PreparedStatement ps = conn.prepareStatement("DROP TABLE " + table);
-            //Das Statement wird ausgefuehrt.
-            ps.executeUpdate();
-            //es wird true zurueckgelifert
-            return true;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        //es wird false zurueckgelifert
-        return false;
-    }
-
-    /**
-     * Eine neue Tabelle wird in der Datenbank erstellt
-     *
-     * @param name name der Tabelle der Datenbank
-     * @param keys Spaltennamen der neuen Tabelle
-     * @return liefert true oder false zurueck ob die operation erfolgte
-     */
-    public boolean createTable(String name, HashMap<String, String> keys) {
-        Statement stat;
-        try {
-            
-            //Ein Query wird vorbereitet, welches einen Table erstellt mit den uebergebenen Attributen.
-            StringBuilder buffer = new StringBuilder("CREATE TABLE IF NOT EXISTS " + name + "(");
-            keys.keySet().stream().forEach((key) -> {
-                buffer.append(key).append(" ").append(keys.get(key)).append(" NOT NULL,");
-            });
-            buffer.deleteCharAt(buffer.length() - 1);
-            buffer.append(");");
-            //Ein Statement wird vorbereitet, welches eine Tabelle erzeugt
-            stat = this.conn.createStatement();
-            PreparedStatement ps = conn.prepareStatement(buffer.toString());
-            //Das Statement wird ausgefuehrt.
-            ps.executeQuery();
-            return true;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return false;
 
     }
 
@@ -290,150 +215,6 @@ public class DatabaseSource implements DataSource{
         return data;
     }
 
-    /**
-     * Der Inhalt einer Datenbank wird zurueckgegeben
-     *
-     * @param table name der Tabelle
-     * @param col Die Spalte die gezeigt werden soll
-     * @return Liefert den Inhalt der Tabelle in einer ArrayList zurueck
-     */
-    public ArrayList<String> showColumn(String table, String col) {
-
-        Statement stat;
-        ResultSet rs = null;
-        try {
-            //Ein Statement wird vorberitet, wleches eine bestimmte Spalte einer Tabelle zurueckliefert.
-            stat = this.conn.createStatement();
-            PreparedStatement ps = conn.prepareStatement("SELECT ? from ?");
-            //Dem Statement wird ein Tabellennamen und ein Spaltennamen uebergeben.
-            ps.setString(1, col);
-            ps.setString(2, table);
-            //Das Staement wird ausgefuehrt.
-            rs = ps.executeQuery();
-
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            //Bei einem Fehler wird null zurueckgegeben.
-            return null;
-        }
-        //Die werde der Spalte werden in einer ArrayList gespeichert und zurueckgegeben.
-        ArrayList<String> resultArray = new ArrayList();
-        try {
-            while (rs.next()) {
-                resultArray.add(rs.getString(col));
-                if (resultArray.size() > 20) {
-                    break;
-                }
-            }
-        } catch (SQLException ex) {
-            return null;
-        }
-        return resultArray;
-    }
-
-    /**
-     *
-     * @param table name der Tabelle der Datenbank
-     * @param col Spalte, welche hinzugefuegt werden sollen
-     * @return liefert true oder false zurueck ob die operation erfolgte
-     */
-    public boolean addCol(String col, String table) {
-        Statement stat;
-        try {
-            //Ein Statement wird vorbereitet, welches einer Tabelle eine Spalte hinzufuegt.
-            stat = this.conn.createStatement();
-            PreparedStatement ps = conn.prepareStatement("ALTR TABLE ? ADD ? STRING");
-            //Dem Statement werden Tabellennamen und Spaltennamen hinzugefuegt.
-            ps.setString(1, table);
-            ps.setString(2, col);
-            //Das Statement wird ausgefuehrt.
-            ps.executeUpdate();
-            return true;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return false;
-
-    }
-
-    public boolean addRow(HashMap dataSet, String tableName) {
-        try {
-            //Ein Statement wird vorbereitetm wleches einer Tabelle eine anzahl von Werten in bestimmte Spalten hinzufuegt.
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO ? (?) VALUES (?)");
-            //Es werden Stringzwischenspeicher erzeugt.
-            StringBuffer bufferCol = new StringBuffer();
-            StringBuffer bufferValue = new StringBuffer();
-            //Es wird durch die zuveraendernden Spalten iterriert.
-            for (Object key : dataSet.keySet()) {
-                //Ein String mit den Spaltennamen wird erzeugt.
-                bufferCol.append(key + ", ");
-                //Es wird ein String mit den Werten der Spalten erzeugt.
-                bufferValue.append(dataSet.get(String.valueOf(key) + ", "));
-
-            }
-            // Dem Statement wird ein Tabellennamen, Spaltennamen und Werte Hinzugefuegt.
-            ps.setString(1, tableName);
-            ps.setString(2, bufferCol.substring(0, bufferCol.length() - 2));
-            ps.setString(3, bufferValue.substring(0, bufferValue.length() - 2));
-            ps.executeUpdate();
-            return true;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return false;
-    }
-
-    /**
-     * Eine Spalte einer Tablle wird entfernt
-     *
-     * @param col Spalte, welche entfernt werden soll
-     * @param table Tabelle, aus welcher die Spalte entfernt werden soll.
-     * @return liefert true oder false zurueck ob die Operation erfolgte
-     */
-    public boolean delColumn(String col, String table) {
-        Statement stat;
-        try {
-            //Es wird ein Statement vorbereitet, welches eine Spalte einer Tabelle entfernt.
-            stat = this.conn.createStatement();
-            PreparedStatement ps = conn.prepareStatement("ALTER TABLE ? DROP COLUMN ?");
-            //Dem Statement wird ein Tabellennamen und ein Spaltennamen uebergeben.
-            ps.setString(1, table);
-            ps.setString(2, col);
-            ps.executeUpdate();
-            return true;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
-     * @deprecated Daten einer Datenbank werden aufbereitet
-     *
-     * @param resultSet Daten, welche aufbereitet werden sollen
-     * @param columnName Name der Spalte, wessen Daten aufbereitet werden sollen
-     * @return Aufbereitete Daten werden in einer ArrayList zurueck geliefert
-     */
-    public ArrayList<String> extractResult(ResultSet resultSet, String columnName) {
-        ArrayList<String> resultArray = new ArrayList();
-
-        try {
-            while (resultSet.next()) {
-                resultArray.add(resultSet.getString(columnName));
-                if (resultArray.size() > 20) {
-                    break;
-
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(DatabaseSource.class
-                    .getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return resultArray;
-    }
-
     public String getDatabaseName() {
         return this.url.substring(12);
     }
@@ -452,15 +233,14 @@ public class DatabaseSource implements DataSource{
     @Override
     public ArrayList<Double[]> getData(String path) {
         ArrayList<Double[]> data = new ArrayList<Double[]>();
-        this.url = "jdbc\\:sqlite\\:aue_2012.db3";
-        this.user = "root";
-        this.pass = "";
-        getConnection();
+        if (this.url == null || this.user == null || this.pass == null) {
+            this.connect("jdbc\\:sqlite\\:aue_2012.db3", "root", "");
+        } else {
+            connect(this.url, this.user, this.pass);
+        }
         getTable(path, null);
-        
-        
-        
-        
+
+        /////
         return data;
     }
 }

@@ -26,11 +26,11 @@ public class Controller {
     private DataSource source;
     private Chart chart;
     private PropertyHandler property;
-    private String selectedItem;
     private Chart balkenChart;
     private Chart linieChart;
     private ArrayList<Double[]> data;
     private static Controller INSTANCE = null;
+    private DatabaseSource dbSource;
 
     public static Controller getInstance() {
         if (INSTANCE == null) {
@@ -40,6 +40,7 @@ public class Controller {
     }
 
     public Controller() {
+        property = new PropertyHandler();
         try {
             source = (DataSource) Class.forName("de.szut.dqi12.bley.pool.source." + property.getProperty("dataSource")).newInstance();
         } catch (Exception e) {
@@ -51,23 +52,21 @@ public class Controller {
             chart = new BalkenChart();
         }
 
-        property = new PropertyHandler();
         gui = new Gui();
-        selectedItem = (property.getProperty("selectedItem"));
-
         linieChart = new LinienChart();
         balkenChart = new BalkenChart();
+        dbSource = new DatabaseSource();
         data = null;
 
     }
 
-    public void setSelectedItem(String selectedItem) {
+    public void setTable(String selectedItem) {
         if (selectedItem != null) {
-            this.selectedItem = selectedItem;
+            property.savePropertie("selectedItem", selectedItem);
+            gui.fillTable(dbSource.getTable(selectedItem, null));
             
             ///+++++++++++
 //            this.setGuiTable(source.getData(selectedItem));
-
             //DO SOMETHING
         }
     }
@@ -100,17 +99,14 @@ public class Controller {
     }
 
     public void connect() {
-        gui.fillComboBox(((DatabaseSource)chart).getTableNames());
-        
-        
+
+        this.dbSource.connect(property.getProperty("url"), property.getProperty("user"), property.getProperty("passoword"));
+
+        gui.fillComboBox(this.dbSource.getTableNames());
+
     }
 
     public void start() {
     }
-
-    public void setGuiTable(HashMap<String, ArrayList<String>> data) {
-        gui.fillTable(data);
-    }
-  
 
 }

@@ -1,8 +1,5 @@
 
 import de.szut.dqi12.bley.pool.controller.Controller;
-import de.szut.dqi12.bley.pool.gui.Gui;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -21,7 +18,6 @@ public class main {
 //        new Gui().setGraph(chart);
        
         Controller.getInstance().start();
-        
     }
 
 }

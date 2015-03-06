@@ -75,7 +75,7 @@ public class PropertyHandler {
 
     public void savePropertie(String key, String value) {
         properties.setProperty(key, value);
-        updateProperties();
+        saveProperties();
     }
 
     /**
@@ -89,6 +89,7 @@ public class PropertyHandler {
         try {
             OutputStream outputStream = new FileOutputStream(file);
             properties.store(outputStream, "Settings for Pool");
+            outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
