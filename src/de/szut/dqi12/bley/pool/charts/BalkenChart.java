@@ -32,75 +32,60 @@ public class BalkenChart implements Chart {
     private ITrace2D trace;
     private IAxis axisX;
 
+    /**
+     * Komponenten der Klasse werden initialisiert.
+     */
     public BalkenChart() {
+        //Eine Defaultrange wird angelegt.
         this.range = new int[2];
         range[0] = 0;
         range[1] = 100;
         this.range = range;
+
+        //Ein neues Chart2D-Objekt wird erzeugt.
         chart = new Chart2D();
 
-        // Obtain the basic default axes: 
+        //Axen des Charts werden erzeugt und zugewiesen.
         axisX = chart.getAxisX();
         IAxis axisY = chart.getAxisY();
-
-        // Feature: Grids:
-//        chart.setGridColor(Color.GREEN);
         axisX.setPaintGrid(true);
         axisY.setPaintGrid(true);
-
-        // Create an ITrace:
-        trace = new Trace2DSimple();
-        // Add the trace to the chart:
-        chart.addTrace(trace);
-
-        // Feature: trace painters: You are also able to specify multiple ones!
-        trace.setTracePainter(new TracePainterVerticalBar(6, chart));
-
-        // Feature: trace color. 
-        trace.setColor(Color.GREEN);
-
-        // Feature: Axis title font. 
         Font titleFont = UIManager.getDefaults().getFont("Label.font").deriveFont(14f).deriveFont(
                 Font.BOLD);
         IAxis.AxisTitle axisTitle = axisY.getAxisTitle();
         axisTitle.setTitleFont(titleFont);
-
-        // Feature: axis title.
-//        axisTitle.setTitle(yTitle);
-        // Feature: axis formatter.
-//        axisY.setFormatter(new LabelFormatterDate(new SimpleDateFormat()));
-
-        // Feature: axis title (again).
-//    axisTitle = axisX.getAxisTitle();
-//        axisTitle.setTitle(xTitle);
-//    axisTitle.setTitleFont(titleFont);
-        // Feature: range policy for axis. 
         axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(this.range[0], this.range[1])));
-//        axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(0, 220)));
-        
-        // Feature: turn on tool tips (recommended for use in static mode only): 
-        chart.setToolTipType(Chart2D.ToolTipType.VALUE_SNAP_TO_TRACEPOINTS);
 
-        // Feature: turn on highlighting: Two steps enable it on the chart and set a highlighter for the trace: 
+        //Ein Trace2D-Objekt wird erzeugt und dem Chart hinzugeeuegt.
+        trace = new Trace2DSimple();
+        chart.addTrace(trace);
+        trace.setTracePainter(new TracePainterVerticalBar(6, chart));
+
+        //Farben des Grafen und des Hintergrunds werden gesetzt.
+        trace.setColor(Color.GREEN);
+        chart.setBackground(Color.cyan);
+
+        chart.setToolTipType(Chart2D.ToolTipType.VALUE_SNAP_TO_TRACEPOINTS);
         Set<IPointHighlighter<?>> highlighters = trace.getPointHighlighters();
         highlighters.clear();
         trace.addPointHighlighter(new PointHighlighterConfigurable(new PointPainterDisc(20), true));
         chart.enablePointHighlighting(true);
-        chart.setBackground(Color.cyan);
+
     }
 
     @Override
     public Chart2D generateChart(ArrayList<Double[]> data) {
+        //Es wird geprueft ob die uebergebenen Daten ungleich Null sind.
         if (data != null) {
-            if(range[1] > data.size()){
+            //Wenn die Range die Groesze der Daten uebertifft, wird die Range auf die Groesze der Daten gesetzt.
+            if (range[1] > data.size()) {
                 range[1] = data.size();
-                        axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(this.range[0], this.range[1])));
+                axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(this.range[0], this.range[1])));
 
             }
+            //Dem Chart werden die uebergebenen Daten als Punkte uebergeben.
             for (double i = range[0]; i < range[1]; i++) {
-                
                 trace.addPoint(data.get((int) i)[0], data.get((int) i)[1]);
-
             }
         }
         return chart;

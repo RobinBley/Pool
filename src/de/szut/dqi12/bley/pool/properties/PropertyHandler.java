@@ -63,7 +63,7 @@ public class PropertyHandler {
     /**
      * Standard Einstellungen, hart gecoded.
      *
-     * @return Ob das Speichern der Standard Einstellungen funktioniert hat.
+     * @return Boolean Ob das Speichern der Standard Einstellungen erfolgte.
      */
     public boolean saveProperties(String source, String selectedItem, String chart) {
         properties.setProperty("dataSource", source);
@@ -81,7 +81,7 @@ public class PropertyHandler {
     /**
      * Speichert die Properties ab.
      *
-     * @return Ob das Abspeichern geklappt hat oder nicht.
+     * @return Boolean Ob das Abspeichern erfolgte.
      */
     public boolean saveProperties() {
         File file = new File("pool.properties");

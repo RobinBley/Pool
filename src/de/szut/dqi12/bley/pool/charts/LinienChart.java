@@ -24,39 +24,38 @@ public class LinienChart implements Chart {
     private ZoomableChart chart;
     private ITrace2D trace;
 
+    /**
+     * Komponenten der Klasse werden initialisiert.
+     */
     public LinienChart() {
 
         range = new int[2];
-//        range[0] = 0;
-//        range[1] = 10;
 
-        // Create a chart
+        //Ein ZoomableChart-Objekt wird erzeugt.
         chart = new ZoomableChart();
 
-        //create a new axis - for test by anadi
+        //Axen des Charts werden erzeugt und zugewiesen.
         AAxis yAxis = new AxisLinear();
         chart.addAxisYRight(yAxis);
         AAxis xAxis = new AxisLinear();
         chart.addAxisXBottom(xAxis);
-        // Create ITrace
+
+        //Ein Trace2D-Objekt wird erzeugt, welches die Axen zugewiesen bekommt und dem Chart zugewiesen wird.
         trace = new Trace2DSimple();
         chart.addTrace(trace, xAxis, yAxis);
         trace.setColor(Color.RED);
-//        trace.setStroke(new BasicStroke(2));
+
+        //Farben des Hintergrunds und des Grafen werden gesetzt.
         trace.setColor(Color.GREEN);
         chart.setBackground(Color.cyan);
 
-//        zoomAllButton.addActionListener(new MultiAxisZoomTest.ZoomAllAdapter(chart));
-//        trace.setColor(Color.RED);
-//        ChartPanel chartPanel = new ChartPanel(chart);
-        // add a titlede border:
-//        chartPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory
-//                .createLineBorder(Color.BLACK), "Chart", TitledBorder.CENTER, TitledBorder.CENTER));
     }
 
     @Override
     public Chart2D generateChart(ArrayList<Double[]> data) {
+        //Es wird geprueft ob die uebergebenen Daten ungleich Null sind.
         if (data != null) {
+            //Dem Chart werden die uebergebenen Daten als Punkte uebergeben.
             for (int i = 0; i <= data.size() - 1; i++) {
                 if (data.size() <= (i - 1)) {
                     break;
