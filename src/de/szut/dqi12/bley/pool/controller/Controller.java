@@ -8,12 +8,13 @@ package de.szut.dqi12.bley.pool.controller;
 import de.szut.dqi12.bley.pool.charts.BalkenChart;
 import de.szut.dqi12.bley.pool.charts.Chart;
 import de.szut.dqi12.bley.pool.charts.LinienChart;
-import de.szut.dqi12.bley.pool.controller.source.DataSource;
+import de.szut.dqi12.bley.pool.source.DataSource;
 import de.szut.dqi12.bley.pool.database.DatabaseOperator;
-import de.szut.dqi12.bley.pool.controller.source.SourceCSV;
+import de.szut.dqi12.bley.pool.source.TxtSource;
 import de.szut.dqi12.bley.pool.gui.Gui;
 import de.szut.dqi12.bley.pool.properties.Charts;
 import de.szut.dqi12.bley.pool.properties.PropertyHandler;
+import de.szut.dqi12.bley.pool.properties.Sources;
 import java.util.ArrayList;
 
 /**
@@ -31,6 +32,7 @@ public class Controller {
     private ArrayList<Double[]> data;
     private static Controller INSTANCE = null;
     private DatabaseOperator dbSource;
+    private String path;
 
     /**
      * Singleton Pattern. Diese Funktion Liefert ein Objekt vom Typ Controller
@@ -64,7 +66,7 @@ public class Controller {
         try {
             source = (DataSource) Class.forName("de.szut.dqi12.bley.pool.source." + property.getProperty("dataSource")).newInstance();
         } catch (Exception e) {
-            source = new SourceCSV();
+            source = new TxtSource();
         }
         //Es wird versucht ein neues Chart-Objekt zu initialisieren, dessen Klassenname sich in den Properties befindet.
         //Wenn dies nicht gelingt wird ein BalkenChart-Objekt initialisiert.
@@ -73,6 +75,13 @@ public class Controller {
         } catch (Exception e) {
             chart = new BalkenChart();
         }
+        try {
+            path = property.getProperty("path");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //Der Oberflaeche wird ein Graph hinzugefuegt, welcher die Daten der letzten Nutzung der Applikation enthaelt.
+        setChart(null, null, null);
 
     }
 
@@ -97,43 +106,34 @@ public class Controller {
      * @param path Pfad zur Datenquelle
      * @param chartName Name des Diagrammtyps
      */
-    public void setChart(String path, Charts chartName) {
-        //Es wird geprueft ob der angegebene Pfad und der Angegebene Name des Diagrammtyps null sind.
-        if (path == null && chartName != null) {
-            //Es wird versucht ein Objekt von dem uebergebenen Diagrammtyp zu erzeugen.
+    public void setChart(String path, Sources sources, Charts chartName) {
+        if (sources != null) {
+            try {
+                this.source = (DataSource) Class.forName("de.szut.dqi12.bley.pool.source." + sources.name()).newInstance();
+                property.savePropertie("dataSource", sources.name());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                this.source = new TxtSource();
+            }
+        }
+        if (path != null) {
+            this.path = path;
+            saveProperty("path", path);
+        }
+        if (chartName != null) {
             try {
                 chart = (Chart) Class.forName("de.szut.dqi12.bley.pool.charts." + chartName.name()).newInstance();
                 //Der Name des Diagramtyps wird in den Properties gespeichert.
                 property.savePropertie("chart", chartName.name());
-
             } catch (Exception ex) {
                 ex.printStackTrace();
                 //Als Default-Diagrammtyp wird BalkenChart verwendet.
                 chart = new BalkenChart();
             }
-            //Der Oberflaeche wird ein generiertes Diagramm uebergeben.
-            gui.setGraph(chart.generateChart(data));
-
-            //Es wird geprueft ob Pfad und Diagrammtyp ungleich null sind.
-        } else if (chartName != null && path != null) {
-            try {
-                //Es wird versucht ein Objekt von dem uebergebenen Diagrammtyp zu erzeugen.
-                chart = (Chart) Class.forName("de.szut.dqi12.bley.pool.charts." + chartName.name()).newInstance();
-                //Der Name des Diagramtyps wird in den Properties gespeichert.
-                property.savePropertie("chart", chartName.name());
-            } catch (Exception ex) {
-                //Als Default-Diagrammtyp wird BalkenChart verwendet.
-                chart = new BalkenChart();
-            }
-            //Der Oberflaeche wird ein generiertes Diagramm uebergeben
-            gui.setGraph(chart.generateChart(source.getData(path)));
-            //Wenn der Pfad ungleich null ist, werden die Daten aus der Datenquelle geladen.
-        } else if (path != null) {
-            data = source.getData(path);
-            //Der Oberflaeche wird ein generiertes Diagramm uebergeben
-            gui.setGraph(chart.generateChart(data));
-
         }
+
+        gui.setGraph(chart.generateChart(source.getData(this.path)));
+
     }
 
     /**

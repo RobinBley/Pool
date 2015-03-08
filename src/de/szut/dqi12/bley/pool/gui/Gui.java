@@ -1,7 +1,7 @@
 package de.szut.dqi12.bley.pool.gui;
 
 import de.szut.dqi12.bley.pool.controller.Controller;
-import de.szut.dqi12.bley.pool.properties.Charts;
+import de.szut.dqi12.bley.pool.properties.*;
 import info.monitorenter.gui.chart.Chart2D;
 import info.monitorenter.gui.chart.views.ChartPanel;
 import java.awt.BorderLayout;
@@ -14,6 +14,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -27,7 +28,7 @@ public class Gui extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private JMenuItem fileOpenItem;
+    private JMenu fileOpenItem;
     private JMenuItem databseMenu;
     private JMenu fileMenu;
     private JMenuBar bar;
@@ -36,6 +37,9 @@ public class Gui extends javax.swing.JFrame {
     private JMenuItem chartItemLinienDiagramm;
     private JMenu options;
     private JMenuItem properties;
+    private JMenuItem menuCsv;
+    private JMenuItem menuTxt;
+    private JMenuItem menuOther;
 
     /**
      * Komponenten der Klasse werden Initialisiert
@@ -64,10 +68,8 @@ public class Gui extends javax.swing.JFrame {
      * Den Komponenten der Klasse Gui werden ActionListener inzugefuegt.
      */
     private void addListener() {
-        
+
 //        Controller.getInstance().setChart("getSelectedColumoderso", null);
-        
-        
         this.properties.addActionListener(new ActionListener() {
 
             @Override
@@ -90,36 +92,19 @@ public class Gui extends javax.swing.JFrame {
                 Controller.getInstance().connect();
             }
         });
-        fileOpenItem.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-
-                int selectedOption = fileChooser.showOpenDialog(fileOpenItem);
-
-                if (selectedOption == JFileChooser.APPROVE_OPTION) {
-                    Controller.getInstance().setChart(fileChooser.getSelectedFile().getPath(), null);
-                    disableDatabaseComponents();
-                    jPanel1.setBounds(getBounds());
-                    validate();
-                }
-            }
-
-        });
 
         chartItemBalkenDiagramm.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                Controller.getInstance().setChart(null, Charts.BalkenChart);
+                Controller.getInstance().setChart(null, null, Charts.BalkenChart);
             }
         });
         chartItemLinienDiagramm.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                Controller.getInstance().setChart(null, Charts.LinienChart);
+                Controller.getInstance().setChart(null, null, Charts.LinienChart);
 
             }
         });
@@ -128,6 +113,59 @@ public class Gui extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 enableDatabaseComponents();
+            }
+        });
+
+        menuCsv.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV FILES", "CSV", "csv");
+                fileChooser.setFileFilter(filter);
+                int selectedOption = fileChooser.showOpenDialog(menuCsv);
+
+                if (selectedOption == JFileChooser.APPROVE_OPTION) {
+                    Controller.getInstance().setChart(fileChooser.getSelectedFile().getPath(), Sources.SourceCSV, null);
+                    disableDatabaseComponents();
+                    jPanel1.setBounds(getBounds());
+                    validate();
+                }
+
+            }
+        });
+        menuTxt.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "TEXT", "txt");
+                fileChooser.setFileFilter(filter);
+                int selectedOption = fileChooser.showOpenDialog(menuTxt);
+
+                if (selectedOption == JFileChooser.APPROVE_OPTION) {
+                    Controller.getInstance().setChart(fileChooser.getSelectedFile().getPath(), Sources.TxtSource, null);
+                    disableDatabaseComponents();
+                    jPanel1.setBounds(getBounds());
+                    validate();
+                }
+
+            }
+        });
+        menuOther.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                int selectedOption = fileChooser.showOpenDialog(menuOther);
+
+                if (selectedOption == JFileChooser.APPROVE_OPTION) {
+                    Controller.getInstance().setChart(fileChooser.getSelectedFile().getPath(), Sources.TxtSource, null);
+                    disableDatabaseComponents();
+                    jPanel1.setBounds(getBounds());
+                    validate();
+                }
+
             }
         });
     }
@@ -143,18 +181,26 @@ public class Gui extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox();
         jPanel1 = new javax.swing.JPanel();
 
-
         //Intialisierung der MenuBar
         //Intialisierung des Menus:File
         bar = new JMenuBar();
-        fileOpenItem = new JMenuItem();
+        menuCsv = new JMenuItem();
+        menuTxt = new JMenuItem();
+        fileOpenItem = new JMenu();
         fileMenu = new JMenu();
         databseMenu = new JMenuItem();
+        menuOther = new JMenuItem();
+        menuCsv.setText("CSV-Datei");
+        menuTxt.setText("TEXT-DATEI");
+        menuOther.setText("try other...");
         fileMenu.setText("file");
         fileOpenItem.setText("Open File");
         fileMenu.add(fileOpenItem);
         databseMenu.setText("Datenbank");
         fileMenu.add(databseMenu);
+        fileOpenItem.add(menuCsv);
+        fileOpenItem.add(menuTxt);
+        fileOpenItem.add(menuOther);
         bar.add(fileMenu);
 
         //Intialisierung des Menus:Chart
@@ -167,7 +213,7 @@ public class Gui extends javax.swing.JFrame {
         chartMenu.add(chartItemBalkenDiagramm);
         chartMenu.add(chartItemLinienDiagramm);
         bar.add(chartMenu);
-        
+
         //Intialisierung des Menus:Chart
         options = new JMenu();
         properties = new JMenuItem();
@@ -178,6 +224,7 @@ public class Gui extends javax.swing.JFrame {
 
         setJMenuBar(bar);
 
+        setTitle("Pool");
         jPanel1.setLayout(new BorderLayout());
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);

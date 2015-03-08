@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.szut.dqi12.bley.pool.controller.source;
+package de.szut.dqi12.bley.pool.source;
 
 import au.com.bytecode.opencsv.CSVReader;
 import java.io.FileReader;

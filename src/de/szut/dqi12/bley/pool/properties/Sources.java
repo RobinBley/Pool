@@ -10,9 +10,9 @@ package de.szut.dqi12.bley.pool.properties;
  *
  * @author Robin
  */
-public enum Soures {
+public enum Sources {
 
-    CSVSource,
+    SourceCSV,
     TxtSource
 
 }

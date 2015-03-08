@@ -31,7 +31,7 @@ public class PropertyDialog extends javax.swing.JFrame {
 
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        sourceCSV1 = new de.szut.dqi12.bley.pool.controller.source.SourceCSV();
+        sourceCSV1 = new de.szut.dqi12.bley.pool.source.SourceCSV();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -90,10 +90,10 @@ public class PropertyDialog extends javax.swing.JFrame {
                                                 .addComponent(jLabel2)
                                                 .addComponent(jLabel6))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(jTextField2)
-                                                .addComponent(jTextField3)
-                                                .addComponent(jTextField4)
+                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jTextField2)
+                                                        .addComponent(jTextField3)
+                                                        .addComponent(jTextField4)
                                                 .addComponent(jTextField6))))
                         .addContainerGap())
         );
@@ -172,6 +172,6 @@ public class PropertyDialog extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField6;
-    private de.szut.dqi12.bley.pool.controller.source.SourceCSV sourceCSV1;
+    private de.szut.dqi12.bley.pool.source.SourceCSV sourceCSV1;
     // End of variables declaration                   
 }
