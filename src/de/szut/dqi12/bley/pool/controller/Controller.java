@@ -97,6 +97,8 @@ public class Controller {
             property.savePropertie("selectedItem", selectedItem);
             //Die Tabelle der Oberflaeche wird gefuellt.
             gui.fillTable(dbSource.getTable(selectedItem));
+        }else{
+            gui.showHint("Ein Fehler ist aufgetreten.\nBitte ueberpruefen sie ihre Einstellungen");
         }
     }
 
@@ -108,6 +110,7 @@ public class Controller {
      */
     public void setChart(String path, Sources sources, Charts chartName) {
         if (sources != null) {
+            System.out.println("hallo1");
             try {
                 this.source = (DataSource) Class.forName("de.szut.dqi12.bley.pool.source." + sources.name()).newInstance();
                 property.savePropertie("dataSource", sources.name());
@@ -117,6 +120,7 @@ public class Controller {
             }
         }
         if (path != null) {
+            System.out.println("hallo2");
             this.path = path;
             saveProperty("path", path);
         }
@@ -132,8 +136,15 @@ public class Controller {
             }
         }
 
-        gui.setGraph(chart.generateChart(source.getData(this.path)));
-
+        try {
+            this.data = source.getData(this.path, property.getProperty("splittingChar").charAt(0));
+        } catch (Exception e) {
+            this.data = source.getData(this.path, property.getProperty(";").charAt(0));
+        }
+            gui.setGraph(chart.generateChart(this.data));
+        if (data == null) {
+            gui.showHint("Ein Fehler ist aufgetreten.\nBitte ueberpruefen sie ihre Einstellungen");
+        }
     }
 
     /**

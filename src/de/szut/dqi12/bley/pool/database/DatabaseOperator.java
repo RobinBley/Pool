@@ -132,7 +132,7 @@ public class DatabaseOperator {
                 tableNames.add(rs.getString("TABLE_NAME"));
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            return null;
         }
         //Die ArrayList wird zurueckgeliefert.
         return tableNames;
@@ -194,6 +194,7 @@ public class DatabaseOperator {
         } catch (SQLException ex) {
             //Bei einem Fehler wird null zurueckgegeben
             ex.printStackTrace();
+            return null;
         }
         //Die HashMap mit Spaltennamen und Werten wird zurueckgegeben
         return data;

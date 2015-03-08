@@ -13,6 +13,6 @@ import java.util.ArrayList;
  */
 public interface DataSource {
     
-    public ArrayList<Double[]> getData(String path);
+    public ArrayList<Double[]> getData(String path, char splittingChar);
     
 }

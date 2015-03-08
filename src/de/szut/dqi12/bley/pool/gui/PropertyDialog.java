@@ -56,7 +56,7 @@ public class PropertyDialog extends javax.swing.JFrame {
 
         jLabel5.setText("url");
 
-        jLabel6.setText("Fileformat");
+        jLabel6.setText("Splitting Char");
 
         jButton2.setText("Save");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -122,14 +122,14 @@ public class PropertyDialog extends javax.swing.JFrame {
                                 .addComponent(jButton2))
                         .addGap(2, 2, 2))
         );
-        setTextfieldText(Controller.getInstance().getProperty("url"), Controller.getInstance().getProperty("user"), Controller.getInstance().getProperty("password"), Controller.getInstance().getProperty("fileformat"));
+        setTextfieldText(Controller.getInstance().getProperty("url"), Controller.getInstance().getProperty("user"), Controller.getInstance().getProperty("password"), Controller.getInstance().getProperty("splittingChar"));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>                        
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {
-        JOptionPane.showMessageDialog(this, "url = Pfad der Datenbank (Form = jdbc\\:sqlite\\:DATEIPFAD)\nUser = Benutzername fuer den Zugriff auf die Datenbank\npassword = Password des Benutzers\nFileformat = Dateiformat der Chartdaten");
+        JOptionPane.showMessageDialog(this, "url = Pfad der Datenbank (Form = jdbc\\:sqlite\\:DATEIPFAD)\nUser = Benutzername fuer den Zugriff auf die Datenbank\npassword = Password des Benutzers\nFileformat = Dateiformat der Chartdaten\n Charakter mit dem die Werte einer Datei gesplittet werden (nur ein Charakter!)");
     }
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,11 +143,11 @@ public class PropertyDialog extends javax.swing.JFrame {
         this.dispose();
     }
 
-    public void setTextfieldText(String url, String user, String password, String fileformat) {
+    public void setTextfieldText(String url, String user, String password, String splitChar) {
         jTextField2.setText(url);
         jTextField3.setText(user);
         jTextField4.setText(password);
-        jTextField6.setText(fileformat);
+        jTextField6.setText(splitChar);
     }
 
     public HashMap<String, String> getProperties() {
@@ -155,7 +155,7 @@ public class PropertyDialog extends javax.swing.JFrame {
         properties.put("url", jTextField2.getText());
         properties.put("user", jTextField3.getText());
         properties.put("password", jTextField4.getText());
-        properties.put("fileformat", jTextField6.getText());
+        properties.put("splittingChar", jTextField6.getText());
         return properties;
     }
 

@@ -6,7 +6,6 @@
 package de.szut.dqi12.bley.pool.charts;
 
 import info.monitorenter.gui.chart.Chart2D;
-import info.monitorenter.gui.chart.ITrace2D;
 import info.monitorenter.gui.chart.ZoomableChart;
 import info.monitorenter.gui.chart.axis.AAxis;
 import info.monitorenter.gui.chart.axis.AxisLinear;
@@ -20,19 +19,15 @@ import java.util.ArrayList;
  */
 public class LinienChart implements Chart {
 
-    private int[] range;
-    private ZoomableChart chart;
-    private ITrace2D trace;
-
     /**
      * Komponenten der Klasse werden initialisiert.
      */
-    public LinienChart() {
-
-        range = new int[2];
+    @Override
+    public Chart2D generateChart(ArrayList<Double[]> data) {
+        int[] range = new int[2];
 
         //Ein ZoomableChart-Objekt wird erzeugt.
-        chart = new ZoomableChart();
+        ZoomableChart chart = new ZoomableChart();
 
         //Axen des Charts werden erzeugt und zugewiesen.
         AAxis yAxis = new AxisLinear();
@@ -41,18 +36,13 @@ public class LinienChart implements Chart {
         chart.addAxisXBottom(xAxis);
 
         //Ein Trace2D-Objekt wird erzeugt, welches die Axen zugewiesen bekommt und dem Chart zugewiesen wird.
-        trace = new Trace2DSimple();
+        Trace2DSimple trace = new Trace2DSimple();
         chart.addTrace(trace, xAxis, yAxis);
         trace.setColor(Color.RED);
 
         //Farben des Hintergrunds und des Grafen werden gesetzt.
         trace.setColor(Color.GREEN);
         chart.setBackground(Color.cyan);
-
-    }
-
-    @Override
-    public Chart2D generateChart(ArrayList<Double[]> data) {
         //Es wird geprueft ob die uebergebenen Daten ungleich Null sind.
         if (data != null) {
             //Dem Chart werden die uebergebenen Daten als Punkte uebergeben.

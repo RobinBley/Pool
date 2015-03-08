@@ -14,6 +14,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
@@ -238,7 +239,7 @@ public class Gui extends javax.swing.JFrame {
         jTable1.setAutoCreateRowSorter(true);
         jScrollPane1.setViewportView(jTable1);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel());
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -333,6 +334,10 @@ public class Gui extends javax.swing.JFrame {
             this.jPanel1.validate();
         }
 
+    }
+
+    public void showHint(String hint) {
+        JOptionPane.showMessageDialog(this, hint);
     }
 
 }

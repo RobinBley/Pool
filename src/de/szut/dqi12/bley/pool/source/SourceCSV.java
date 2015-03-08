@@ -13,12 +13,12 @@ import java.util.ArrayList;
 public class SourceCSV implements DataSource {
 
     @Override
-    public ArrayList<Double[]> getData(String path) {
+    public ArrayList<Double[]> getData(String path, char splittingChar) {
         CSVReader reader = null;
         ArrayList<Double[]> data = null;
         try {
             //Get the CSVReader instance with specifying the delimiter to be used
-            reader = new CSVReader(new FileReader(path), ';');
+            reader = new CSVReader(new FileReader(path), splittingChar);
             String[] nextLine;
             data = new ArrayList<Double[]>();
             Double[] point = new Double[2];
@@ -29,11 +29,11 @@ public class SourceCSV implements DataSource {
                     point[1] = Double.valueOf(nextLine[1]);
                     data.add(point.clone());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                        return null;
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         } finally {
             try {
                 reader.close();

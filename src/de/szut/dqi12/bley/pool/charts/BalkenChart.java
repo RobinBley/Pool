@@ -27,26 +27,26 @@ import javax.swing.UIManager;
  */
 public class BalkenChart implements Chart {
 
-    private int[] range;
-    private Chart2D chart;
-    private ITrace2D trace;
-    private IAxis axisX;
-
     /**
      * Komponenten der Klasse werden initialisiert.
      */
     public BalkenChart() {
+
+    }
+
+    @Override
+    public Chart2D generateChart(ArrayList<Double[]> data) {
         //Eine Defaultrange wird angelegt.
-        this.range = new int[2];
+        int[] range = new int[2];
         range[0] = 0;
         range[1] = 100;
-        this.range = range;
+        range = range;
 
         //Ein neues Chart2D-Objekt wird erzeugt.
-        chart = new Chart2D();
+        Chart2D chart = new Chart2D();
 
         //Axen des Charts werden erzeugt und zugewiesen.
-        axisX = chart.getAxisX();
+        IAxis axisX = chart.getAxisX();
         IAxis axisY = chart.getAxisY();
         axisX.setPaintGrid(true);
         axisY.setPaintGrid(true);
@@ -54,10 +54,10 @@ public class BalkenChart implements Chart {
                 Font.BOLD);
         IAxis.AxisTitle axisTitle = axisY.getAxisTitle();
         axisTitle.setTitleFont(titleFont);
-        axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(this.range[0], this.range[1])));
+        axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(range[0], range[1])));
 
         //Ein Trace2D-Objekt wird erzeugt und dem Chart hinzugeeuegt.
-        trace = new Trace2DSimple();
+        ITrace2D trace = new Trace2DSimple();
         chart.addTrace(trace);
         trace.setTracePainter(new TracePainterVerticalBar(6, chart));
 
@@ -70,17 +70,12 @@ public class BalkenChart implements Chart {
         highlighters.clear();
         trace.addPointHighlighter(new PointHighlighterConfigurable(new PointPainterDisc(20), true));
         chart.enablePointHighlighting(true);
-
-    }
-
-    @Override
-    public Chart2D generateChart(ArrayList<Double[]> data) {
         //Es wird geprueft ob die uebergebenen Daten ungleich Null sind.
         if (data != null) {
             //Wenn die Range die Groesze der Daten uebertifft, wird die Range auf die Groesze der Daten gesetzt.
             if (range[1] > data.size()) {
                 range[1] = data.size();
-                axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(this.range[0], this.range[1])));
+                axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(range[0], range[1])));
 
             }
             //Dem Chart werden die uebergebenen Daten als Punkte uebergeben.
