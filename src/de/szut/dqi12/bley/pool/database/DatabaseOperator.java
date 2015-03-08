@@ -1,4 +1,4 @@
-package de.szut.dqi12.bley.pool.controller.source;
+package de.szut.dqi12.bley.pool.database;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -9,15 +9,13 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  *
  * @author Robin Bley
  */
-public class DatabaseSource implements DataSource {
+public class DatabaseOperator {
 
     private String user;
     private String pass;
@@ -150,36 +148,22 @@ public class DatabaseSource implements DataSource {
      * @return Eine HashMap, welche als Key den jeweiligen Spaltennamen enthaelt
      * und als Value eine Arraylist vom Typ String, mit den jeweiligen Eintragen
      */
-    public HashMap getTable(String name, String orderCol) {
+    public HashMap getTable(String name) {
         HashMap data = new HashMap<String, ArrayList>();
         Statement stat;
         ResultSet rs = null;
         ArrayList<ArrayList<String>> values = null;
         try {
-            if (orderCol != null) {
-                //Ein Statement wird vorbereitet, welches die Daten einer Tabelle ausliest.
-                stat = this.conn.createStatement();
-                PreparedStatement ps = conn.prepareStatement("select * from ? LIMIT ? OFFSET ? ORDER BY ?");
-                //Der Name der Tabelle, ein start der Werte, einer Reihenfolge der Ordnung 
-                //und ein Ende der Werte werden dem Statement hinzugefuegt.
-                ps.setCursorName("?");
-                ps.setString(1, name);
-                ps.setInt(2, this.end);
-                ps.setInt(3, this.start);
-                ps.setString(4, orderCol);
-                //Das Statement wird ausgefuehrt.
-                rs = ps.executeQuery();
+
+            //Ein Statement wird vorbereitet, welches die Daten einer Tabelle ausliest.
+            stat = this.conn.createStatement();
+            PreparedStatement ps;
+            if (this.start == 0) {
+                ps = conn.prepareStatement("select * FROM " + name);
             } else {
-                //Ein Statement wird vorbereitet, welches die Daten einer Tabelle ausliest.
-                stat = this.conn.createStatement();
-                PreparedStatement ps;
-                if (this.start == 0) {
-                    ps = conn.prepareStatement("select * FROM " + name);
-                } else {
-                    ps = conn.prepareStatement("select * FROM " + name + " LIMIT " + this.start);
-                }
-                rs = ps.executeQuery();
+                ps = conn.prepareStatement("select * FROM " + name + " LIMIT " + this.start);
             }
+            rs = ps.executeQuery();
 
             ResultSetMetaData resultMeta = rs.getMetaData();
             int columnCount = resultMeta.getColumnCount();
@@ -230,7 +214,6 @@ public class DatabaseSource implements DataSource {
         }
     }
 
-    @Override
     public ArrayList<Double[]> getData(String path) {
         ArrayList<Double[]> data = new ArrayList<Double[]>();
         if (this.url == null || this.user == null || this.pass == null) {
@@ -238,7 +221,7 @@ public class DatabaseSource implements DataSource {
         } else {
             connect(this.url, this.user, this.pass);
         }
-        getTable(path, null);
+        getTable(path);
 
         /////
         return data;

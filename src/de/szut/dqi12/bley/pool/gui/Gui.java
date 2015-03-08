@@ -1,6 +1,7 @@
 package de.szut.dqi12.bley.pool.gui;
 
 import de.szut.dqi12.bley.pool.controller.Controller;
+import de.szut.dqi12.bley.pool.properties.Charts;
 import info.monitorenter.gui.chart.Chart2D;
 import info.monitorenter.gui.chart.views.ChartPanel;
 import java.awt.BorderLayout;
@@ -111,14 +112,14 @@ public class Gui extends javax.swing.JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                Controller.getInstance().setChart(null, "BalkenChart");
+                Controller.getInstance().setChart(null, Charts.BalkenChart);
             }
         });
         chartItemLinienDiagramm.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                Controller.getInstance().setChart(null, "LinienChart");
+                Controller.getInstance().setChart(null, Charts.LinienChart);
 
             }
         });
