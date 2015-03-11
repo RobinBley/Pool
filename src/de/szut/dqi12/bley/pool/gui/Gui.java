@@ -7,6 +7,7 @@ import info.monitorenter.gui.chart.views.ChartPanel;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JComboBox;
@@ -17,6 +18,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  *
@@ -83,6 +85,7 @@ public class Gui extends javax.swing.JFrame {
                     public void actionPerformed(ActionEvent e) {
                         JComboBox source = (JComboBox) e.getSource();
                         Controller.getInstance().setTable((String) source.getSelectedItem());
+                        jTable1.setName((String)source.getSelectedItem());
                     }
                 }
         );
@@ -167,6 +170,25 @@ public class Gui extends javax.swing.JFrame {
                     validate();
                 }
 
+            }
+        });
+        
+        jTable1.addMouseListener(new MouseAdapter() {
+
+            
+            
+            public void mouseClicked(java.awt.event.MouseEvent e){
+                Object[] options = {"set as X-Axis", "set as Y-Axis", "cancel"};
+ 
+                int selected = JOptionPane.showOptionDialog(null,
+                                                            "Set Clomun as Axis",null,
+							    JOptionPane.DEFAULT_OPTION, 
+                                                            JOptionPane.INFORMATION_MESSAGE, 
+							    null, options, options[0]);
+                Controller.getInstance().setAxis(selected, jTable1.getName(),jTable1.getColumnName(jTable1.columnAtPoint(e.getPoint())));
+ 
+                
+                
             }
         });
     }

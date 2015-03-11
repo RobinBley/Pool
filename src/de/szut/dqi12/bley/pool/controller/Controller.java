@@ -15,6 +15,7 @@ import de.szut.dqi12.bley.pool.gui.Gui;
 import de.szut.dqi12.bley.pool.properties.Charts;
 import de.szut.dqi12.bley.pool.properties.PropertyHandler;
 import de.szut.dqi12.bley.pool.properties.Sources;
+import info.monitorenter.gui.chart.Chart2D;
 import java.util.ArrayList;
 
 /**
@@ -33,6 +34,7 @@ public class Controller {
     private static Controller INSTANCE = null;
     private DatabaseOperator dbSource;
     private String path;
+    private Chart2D currentGraph;
 
     /**
      * Singleton Pattern. Diese Funktion Liefert ein Objekt vom Typ Controller
@@ -97,7 +99,7 @@ public class Controller {
             property.savePropertie("selectedItem", selectedItem);
             //Die Tabelle der Oberflaeche wird gefuellt.
             gui.fillTable(dbSource.getTable(selectedItem));
-        }else{
+        } else {
             gui.showHint("Ein Fehler ist aufgetreten.\nBitte ueberpruefen sie ihre Einstellungen");
         }
     }
@@ -110,7 +112,6 @@ public class Controller {
      */
     public void setChart(String path, Sources sources, Charts chartName) {
         if (sources != null) {
-            System.out.println("hallo1");
             try {
                 this.source = (DataSource) Class.forName("de.szut.dqi12.bley.pool.source." + sources.name()).newInstance();
                 property.savePropertie("dataSource", sources.name());
@@ -120,7 +121,6 @@ public class Controller {
             }
         }
         if (path != null) {
-            System.out.println("hallo2");
             this.path = path;
             saveProperty("path", path);
         }
@@ -141,7 +141,7 @@ public class Controller {
         } catch (Exception e) {
             this.data = source.getData(this.path, property.getProperty(";").charAt(0));
         }
-            gui.setGraph(chart.generateChart(this.data));
+        gui.setGraph(chart.generateChart(this.data));
         if (data == null) {
             gui.showHint("Ein Fehler ist aufgetreten.\nBitte ueberpruefen sie ihre Einstellungen");
         }
@@ -181,6 +181,33 @@ public class Controller {
      */
     public String getProperty(String key) {
         return this.property.getProperty(key);
+    }
+
+    /**
+     *
+     * @param selected
+     * @param table
+     */
+    public boolean setAxis(int selected, String table, String column) {
+        ArrayList<Double> colData = new ArrayList<Double>();
+        for (String node : this.dbSource.showColumn(table, column)) {
+            try{
+                colData.add(Double.valueOf(node));
+            }catch(Exception e){
+                gui.showHint("Daten koennen nicht verwendet werden!");
+                return false;
+            }
+        }
+
+        //Es wird geprueft ob der X-Achse die anegegebenen Werte hinzugefuegt werden sollen.
+        if (selected == 0) {
+            this.gui.setGraph(this.chart.setAxis(colData, true));
+
+            //Es wird geprueft ob der Y-Achse die anegegebenen Werte hinzugefuegt werden sollen.
+        } else if (selected == 1) {
+            this.gui.setGraph(this.chart.setAxis(colData, false));
+        }
+        return true;
     }
 
 }

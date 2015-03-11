@@ -2,16 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group name="Schule">
-            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/gui/PropertyDialog.java</file>
-            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/gui/Gui.java</file>
-            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/Pool.properties</file>
-            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/controller/Controller.java</file>
-            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/source/TxtSource.java</file>
-            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/properties/PropertyHandler.java</file>
-            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/properties/Sources.java</file>
-            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/source/SourceCSV.java</file>
-            <file>file:/C:/Users/Robin/Documents/NetBeansProjects/Pool/src/de/szut/dqi12/bley/pool/source/DataSource.java</file>
-        </group>
+        <group name="Schule"/>
     </open-files>
 </project-private>

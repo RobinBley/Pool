@@ -205,6 +205,44 @@ public class DatabaseOperator {
     }
 
     /**
+     * Der Inhalt einer Datenbank wird zurueckgegeben
+     *
+     * @param table name der Tabelle
+     * @param col Die Spalte die gezeigt werden soll
+     * @return Liefert den Inhalt der Tabelle in einer ArrayList zurueck
+     */
+    public ArrayList<String> showColumn(String table, String col) {
+        Statement stat;
+        ResultSet rs = null;
+        try {
+            //Ein Statement wird vorberitet, wleches eine bestimmte Spalte einer Tabelle zurueckliefert.
+            stat = this.conn.createStatement();
+            //Dem Statement wird ein Tabellennamen und ein Spaltennamen uebergeben.
+            PreparedStatement ps = conn.prepareStatement("SELECT `" + col + "` from " + table);
+            //Das Staement wird ausgefuehrt.
+            rs = ps.executeQuery();
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            //Bei einem Fehler wird null zurueckgegeben.
+            return null;
+        }
+        //Die werde der Spalte werden in einer ArrayList gespeichert und zurueckgegeben.
+        ArrayList<String> resultArray = new ArrayList();
+        try {
+            while (rs.next()) {
+                resultArray.add(rs.getString(col));
+                if (resultArray.size() > 20) {
+                    break;
+                }
+            }
+        } catch (SQLException ex) {
+            return null;
+        }
+        return resultArray;
+    }
+
+    /**
      * Die Verbindung zur Datenbank wird geschlossen
      */
     public void closeConnection() {

@@ -27,17 +27,16 @@ import javax.swing.UIManager;
  */
 public class BalkenChart implements Chart {
 
-    /**
-     * Komponenten der Klasse werden initialisiert.
-     */
-    public BalkenChart() {
+    private Chart2D currentChart;
+    private ArrayList<Double[]> currentData;
+    private int[] range;
 
-    }
+
 
     @Override
     public Chart2D generateChart(ArrayList<Double[]> data) {
         //Eine Defaultrange wird angelegt.
-        int[] range = new int[2];
+        this.range = new int[2];
         range[0] = 0;
         range[1] = 100;
         range = range;
@@ -50,10 +49,7 @@ public class BalkenChart implements Chart {
         IAxis axisY = chart.getAxisY();
         axisX.setPaintGrid(true);
         axisY.setPaintGrid(true);
-        Font titleFont = UIManager.getDefaults().getFont("Label.font").deriveFont(14f).deriveFont(
-                Font.BOLD);
         IAxis.AxisTitle axisTitle = axisY.getAxisTitle();
-        axisTitle.setTitleFont(titleFont);
         axisX.setRangePolicy(new RangePolicyFixedViewport(new Range(range[0], range[1])));
 
         //Ein Trace2D-Objekt wird erzeugt und dem Chart hinzugeeuegt.
@@ -79,11 +75,54 @@ public class BalkenChart implements Chart {
 
             }
             //Dem Chart werden die uebergebenen Daten als Punkte uebergeben.
-            for (double i = range[0]; i < range[1]; i++) {
-                trace.addPoint(data.get((int) i)[0], data.get((int) i)[1]);
+            for (int i = range[0]; i < range[1]; i++) {
+                trace.addPoint(data.get(i)[0], data.get(i)[1]);
             }
         }
+        this.currentData = data;
+        this.currentChart = chart;
         return chart;
     }
+
+    @Override
+    public Chart2D setAxis(ArrayList<Double> Data, boolean axis) {
+        Trace2DSimple trace = (Trace2DSimple) currentChart.getTraces().last();
+        trace.removeAllPoints();
+        ArrayList<Double[]> currentDataCopy = (ArrayList<Double[]>) this.currentData.clone();
+        this.currentData.clear();
+        Double[] element = new Double[2];
+
+        if (axis) {
+            for (int i = range[0]; i < range[1]; i++) {
+                if (Data.size() <= i + 1) {
+                    break;
+                }
+                trace.addPoint(Data.get(i), (double) currentDataCopy.get(i)[1]);
+                element[0] = Data.get(i);
+                element[1] = (double) currentDataCopy.get(i)[0];
+                this.currentData.add(element.clone());
+
+            }
+
+        } else {
+            for (int i = range[0]; i < range[1]; i++) {
+                if (Data.size() <= i + 1) {
+                    break;
+                }
+                trace.addPoint((double) currentDataCopy.get(i)[0], Data.get(i));
+                element[0] = (double) currentDataCopy.get(i)[0];
+                element[1] = Data.get(i);
+                this.currentData.add(element.clone());
+
+            }
+
+        }
+
+        for (Double[] d: this.currentData){
+            System.out.println(d[0] + " " + d[1]);
+        }
+        return this.currentChart;
+    }
+
 
 }

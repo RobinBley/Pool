@@ -7,6 +7,7 @@ package de.szut.dqi12.bley.pool.charts;
 
 import info.monitorenter.gui.chart.Chart2D;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,4 +15,6 @@ import java.util.ArrayList;
  */
 public interface Chart {
     public Chart2D generateChart(ArrayList<Double[]> data);
+    
+    public Chart2D setAxis(ArrayList<Double> Data, boolean axis);
 }
