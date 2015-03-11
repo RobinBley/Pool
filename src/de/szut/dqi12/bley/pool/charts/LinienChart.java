@@ -66,35 +66,55 @@ public class LinienChart implements Chart {
         ArrayList<Double[]> currentDataCopy = (ArrayList<Double[]>) this.currentData.clone();
         this.currentData.clear();
         Double[] element = new Double[2];
+        if (Data.size() < this.currentData.size()){
+            range[1] = this.currentData.size();
+        }else{
+            
+            range[1] = Data.size() - 1;
+        }
 
         if (axis) {
             for (int i = range[0]; i < range[1]; i++) {
                 if (Data.size() <= i + 1) {
-                    break;
+                    element[0] = 0.0;
+                } else {
+                    element[0] = Data.get(i);
+
                 }
-                trace.addPoint(Data.get(i), (double) currentDataCopy.get(i)[1]);
-                element[0] = Data.get(i);
-                element[1] = (double) currentDataCopy.get(i)[0];
+                try{
+                    element[1] = (double) currentDataCopy.get(i)[0];
+                }catch(Exception e){
+                    element[1] = 0.0;
+
+                }
+                trace.addPoint(element[0], element[1]);
                 this.currentData.add(element.clone());
 
             }
 
         } else {
             for (int i = range[0]; i < range[1]; i++) {
-                if (Data.size() <= i + 1 ) {
-                    break;
+                if (Data.size() <= i + 1) {
+                    element[1] = 0.0;
+                } else {
+                    element[1] = Data.get(i);
+
                 }
-                trace.addPoint((double) currentDataCopy.get(i)[0], Data.get(i));
-                element[0] = (double) currentDataCopy.get(i)[0];
-                element[1] = Data.get(i);
+                try{
+                    element[0] = (double) currentDataCopy.get(i)[0];
+                }catch(Exception e){
+                    element[0] = 0.0;
+
+                }
+                trace.addPoint(element[0], element[1]);
                 this.currentData.add(element.clone());
 
             }
 
+            
         }
-
-        return this.currentChart;
         
+        return this.currentChart;
     }
 
   

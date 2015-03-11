@@ -16,10 +16,8 @@ import info.monitorenter.gui.chart.traces.Trace2DSimple;
 import info.monitorenter.gui.chart.traces.painters.TracePainterVerticalBar;
 import info.monitorenter.util.Range;
 import java.awt.Color;
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Set;
-import javax.swing.UIManager;
 
 /**
  *
@@ -30,8 +28,6 @@ public class BalkenChart implements Chart {
     private Chart2D currentChart;
     private ArrayList<Double[]> currentData;
     private int[] range;
-
-
 
     @Override
     public Chart2D generateChart(ArrayList<Double[]> data) {
@@ -91,15 +87,28 @@ public class BalkenChart implements Chart {
         ArrayList<Double[]> currentDataCopy = (ArrayList<Double[]>) this.currentData.clone();
         this.currentData.clear();
         Double[] element = new Double[2];
+        if (Data.size() < this.currentData.size()){
+            range[1] = this.currentData.size();
+        }else{
+            
+            range[1] = Data.size() - 1;
+        }
 
         if (axis) {
             for (int i = range[0]; i < range[1]; i++) {
                 if (Data.size() <= i + 1) {
-                    break;
+                    element[0] = 0.0;
+                } else {
+                    element[0] = Data.get(i);
+
                 }
-                trace.addPoint(Data.get(i), (double) currentDataCopy.get(i)[1]);
-                element[0] = Data.get(i);
-                element[1] = (double) currentDataCopy.get(i)[0];
+                try{
+                    element[1] = (double) currentDataCopy.get(i)[0];
+                }catch(Exception e){
+                    element[1] = 0.0;
+
+                }
+                trace.addPoint(element[0], element[1]);
                 this.currentData.add(element.clone());
 
             }
@@ -107,22 +116,25 @@ public class BalkenChart implements Chart {
         } else {
             for (int i = range[0]; i < range[1]; i++) {
                 if (Data.size() <= i + 1) {
-                    break;
+                    element[1] = 0.0;
+                } else {
+                    element[1] = Data.get(i);
+
                 }
-                trace.addPoint((double) currentDataCopy.get(i)[0], Data.get(i));
-                element[0] = (double) currentDataCopy.get(i)[0];
-                element[1] = Data.get(i);
+                try{
+                    element[0] = (double) currentDataCopy.get(i)[0];
+                }catch(Exception e){
+                    element[0] = 0.0;
+
+                }
+                trace.addPoint(element[0], element[1]);
                 this.currentData.add(element.clone());
 
             }
 
+            
         }
-
-        for (Double[] d: this.currentData){
-            System.out.println(d[0] + " " + d[1]);
-        }
+        
         return this.currentChart;
     }
-
-
 }
